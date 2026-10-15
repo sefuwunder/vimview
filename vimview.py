@@ -451,7 +451,7 @@ class Viewer:
             sdl2.SDLK_k: lambda: self.move_vert(-1),
             sdl2.SDLK_UP: lambda: self.move_vert(-1),
             sdl2.SDLK_0: lambda: self.row_edge(True),
-            sdl2.SDLK_dollar: lambda: self.row_edge(False),
+            sdl2.SDLK_DOLLAR: lambda: self.row_edge(False),
             sdl2.SDLK_g: lambda: self.set_pending("g"),
             sdl2.SDLK_z: lambda: self.set_pending("z"),
             sdl2.SDLK_o: self.cycle_order,
@@ -475,6 +475,11 @@ class Viewer:
             if self.visible:
                 self.sel = len(self.visible) - 1
                 self.ensure_visible()
+            return
+        # $ on US layouts arrives as shift+4 (SDLK_DOLLAR is only for
+        # keyboards with a dedicated $ key) -> end of row
+        if sym == sdl2.SDLK_4 and (mod & sdl2.KMOD_SHIFT):
+            self.row_edge(False)
             return
         fn = keymap.get(sym)
         if fn:
